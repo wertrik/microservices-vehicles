@@ -44,7 +44,6 @@ nbdist/
 
 # PHPUnit
 /app/phpunit.xml
-/phpunit.xml
 
 # Build data
 /build/
@@ -63,3 +62,12 @@ nbdist/
 /web/js/
 
 # End of https://www.toptal.com/developers/gitignore/api/netbeans,symfony
+###> symfony/phpunit-bridge ###
+.phpunit.result.cache
+/phpunit.xml
+###< symfony/phpunit-bridge ###
+
+###> phpunit/phpunit ###
+/phpunit.xml
+.phpunit.result.cache
+###< phpunit/phpunit ###

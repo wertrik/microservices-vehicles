@@ -3,7 +3,6 @@
 namespace App\Service;
 
 use App\DTO\DtoInterface;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Validator\Exception\ValidationFailedException;
 

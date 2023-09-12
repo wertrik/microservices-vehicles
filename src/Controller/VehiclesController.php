@@ -5,12 +5,11 @@ namespace App\Controller;
 use App\DTO\VehicleDTO;
 use App\DTO\VehicleOwnerDTO;
 use App\Entity\Vehicle;
-use App\Entity\VehicleOwner;
 use App\Repository\VehicleOwnerRepository;
 use App\Repository\VehicleRepository;
 use App\Service\DtoValidator;
-use App\Service\Serializer\VehicleSerializer;
 use App\Service\Serializer\VehicleOwnerSerializer;
+use App\Service\Serializer\VehicleSerializer;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityNotFoundException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -44,7 +43,7 @@ class VehiclesController extends AbstractController {
         $this->serializer->deserialize($request->getContent(), VehicleDTO::class, 'json', [AbstractNormalizer::OBJECT_TO_POPULATE => $vehicleDto]);
 
         $this->validator->validateOrFail($vehicleOwnerDto, ["referenceToOwner"]);
-        $this->validator->validateOrFail($vehicleDto);
+        $this->validator->validateOrFail($vehicleDto);        
 
         $vehicleOwner = $this->ownerRepository->find($vehicleOwnerDto->getId());
 
