@@ -117,7 +117,7 @@ class VehiclesController extends AbstractController {
     }
     
     #[Route('/api/vehicles/{vehicleId}/', name: 'api_vehicles_update', methods: 'PATCH')]
-    #[Route('/api/vehicleowners/{ownerId}/vehicles/{vehicleId}', methods: 'PATCH')]
+    #[Route('/api/vehicleowners/{ownerId}/vehicles/{vehicleId}/', methods: 'PATCH')]
     public function update(int $vehicleId, Request $request): JsonResponse {
         
         $vehicleDto = new VehicleDTO();

@@ -5,24 +5,28 @@ namespace App\Tests;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Validator\Exception\ValidationFailedException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 
 class VehiclesTest extends WebTestCase {
 
     private $vehiclesStructureKeys = ["id", "brand", "model", "year"];
     private $vehicleStructureKeys = ["id", "brand", "model", "year", "vehicleOwner"];
+    private $client;
     
+    protected function setUp(): void {
+        
+        $this->client = static::createClient();
+    }
+
+
     /** @Test */    
     public function testGetVehicle() {
+
+        $this->client->request('GET', '/api/vehicles/2/');        
         
-        $client = static::createClient();
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         
-        $client->request('GET', '/api/vehicles/2/');        
-        
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        
-        $actualKeys = array_keys(json_decode($client->getResponse()->getContent(), true));        
+        $actualKeys = array_keys(json_decode($this->client->getResponse()->getContent(), true));        
         
         $this->assertEqualsCanonicalizing($this->vehicleStructureKeys, $actualKeys); 
 
@@ -30,14 +34,12 @@ class VehiclesTest extends WebTestCase {
     
     /** @Test */    
     public function testGetVehicles() {
+
+        $this->client->request('GET', '/api/vehicleowners/1/vehicles/');
         
-        $client = static::createClient();
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         
-        $client->request('GET', '/api/vehicleowners/1/vehicles/');
-        
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        
-        $actualKeys = array_keys(json_decode($client->getResponse()->getContent(), true)[0]);        
+        $actualKeys = array_keys(json_decode($this->client->getResponse()->getContent(), true)[0]);        
         
         $this->assertEqualsCanonicalizing($this->vehiclesStructureKeys, $actualKeys); 
 
@@ -47,12 +49,11 @@ class VehiclesTest extends WebTestCase {
     public function testAddVehicleFailure() {
 
         $model = ["brand" => "Opel", "year" => 2015];
-        $client = static::createClient();
-        $client->catchExceptions(false);
+        $this->client->catchExceptions(false);
         
         $this->expectException(ValidationFailedException::class);
 
-        $client->request('POST', '/api/vehicleowners/1/vehicles/',array(), array(), array('CONTENT_TYPE' => 'application/json'), json_encode($model));
+        $this->client->request('POST', '/api/vehicleowners/1/vehicles/',array(), array(), array('CONTENT_TYPE' => 'application/json'), json_encode($model));
         
     }
     
@@ -60,23 +61,21 @@ class VehiclesTest extends WebTestCase {
     public function testAddVehicle() {
 
         $model = ["brand" => "Opel", "model" => $this->modelProvider(), "year" => 2015];
-        $client = static::createClient();
 
-        $client->request('POST', '/api/vehicleowners/1/vehicles/',array(), array(), array('CONTENT_TYPE' => 'application/json'), json_encode($model));
+        $this->client->request('POST', '/api/vehicleowners/1/vehicles/',array(), array(), array('CONTENT_TYPE' => 'application/json'), json_encode($model));
         
-        $this->assertEquals(201, $client->getResponse()->getStatusCode());
+        $this->assertEquals(201, $this->client->getResponse()->getStatusCode());
         
     }
     
     /** @Test */
     public function testUpdateVehicle() {
         
-        $client = static::createClient();
         $model["model"] = $this->modelProvider();
         
-        $client->request('PATCH', '/api/vehicles/2/',array(), array(), array('CONTENT_TYPE' => 'application/json'), json_encode($model));
+        $this->client->request('PATCH', '/api/vehicles/2/',array(), array(), array('CONTENT_TYPE' => 'application/json'), json_encode($model));
         
-        $this->assertEquals(202, $client->getResponse()->getStatusCode());
+        $this->assertEquals(202, $this->client->getResponse()->getStatusCode());
         
     }
     
